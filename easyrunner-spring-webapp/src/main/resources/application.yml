@@ -1,0 +1,16 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost/easyrunner
+    username: easy
+    password: runner
+  liquibase:
+    url: jdbc:postgresql://localhost/easyrunner
+    user: easy
+    password: runner
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+  main:
+    banner-mode: "off"
+
+context:
+  initializer:
+    classes: com.easyrunner.webapp.BeansInitializer
