@@ -3,26 +3,16 @@ package com.easyrunner.webapp
 import com.easyrunner.webapp.fixture.DatabaseTest
 import com.easyrunner.webapp.users.UserLoginCommand
 import com.easyrunner.webapp.users.UserRegisterCommand
-import com.easyrunner.webapp.users.Username
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.test.web.reactive.server.WebTestClient
 
 
-@AutoConfigureWebTestClient
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserTests : DatabaseTest() {
 
-    @Autowired
-    private lateinit var webTestClient: WebTestClient
-
     companion object {
-        val testUsername = Username("TestUser")
+        const val testUsername = "TestUser"
         const val testPassword = "TestPassword"
     }
 
@@ -38,7 +28,7 @@ class UserTests : DatabaseTest() {
             .expectStatus().isOk
             .expectBody()
             .jsonPath("$.userId").isNotEmpty
-            .jsonPath("$.username").isEqualTo(testUsername.value)
+            .jsonPath("$.username").isEqualTo(testUsername)
     }
 
     @Test

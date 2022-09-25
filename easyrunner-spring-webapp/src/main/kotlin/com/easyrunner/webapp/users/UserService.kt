@@ -12,10 +12,10 @@ class UserService(
     private val transactionalOperator: TransactionalOperator,
 ) {
 
-    fun register(username: Username, password: String): Mono<UserView> =
+    fun register(username: String, password: String): Mono<UserView> =
         transactionalOperator.transactional(
             userRepository
-                .existsByUsername(username.value)
+                .existsByUsername(username)
                 .flatMap { exists ->
                     if (exists) {
                         Mono.error(UsernameAlreadyTakenException())
@@ -23,16 +23,16 @@ class UserService(
                         userRepository.save(
                             UserDb(
                                 userId = UUID.randomUUID().toString(),
-                                username = username.value,
+                                username = username,
                                 passwordHash = passwordEncoder.encode(password)
                             )
                         ).map { it.view() }
                     }
                 })
 
-    fun login(username: Username, password: String): Mono<Void> =
+    fun login(username: String, password: String): Mono<Void> =
         transactionalOperator.transactional(
-            userRepository.findByUsername(username.value)
+            userRepository.findByUsername(username)
                 .switchIfEmpty(Mono.error(IncorrectCredentials()))
                 .flatMap {
                     if (passwordEncoder.matches(password, it.passwordHash)) {
